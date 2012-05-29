@@ -9,6 +9,7 @@
 	var data;
 	var resultsList;
 	var resultsListID = ""
+	var listID = "randomListID123456"
 	
 	$.fn.mobile_fs_suggest = function(options) {
 		
@@ -19,9 +20,12 @@
 			limit : 10, //perhaps an option to ignore limits
 			client_id : "YOUR_FS_CLIENT_ID", //get this from foursquare.com
 			client_secret : "YOUR_FS_CLIENT_SECRET", //same
-			style_results: true //set to false if the way i control the position of results, you can do it yourse
+			style_results: true, //set to false if the way i control the position of results, you can do it yourse
 								//the default is to be right under the input and match the width of the input
 								//and hopefully to adjust in a responsive way
+			list_id: listID //if the user wants to provide a custom ul id selector they can
+							//this will prevent default behavior of adding the <ul> directly after the <input> 
+							//as this may not be desirable behavior
 		}
 		//TODO would be cool to include a "schema : 'something.something.minivenues" in case your results had a different json structure
 		
@@ -121,10 +125,12 @@
 	}
 	
 	function addResultsList(el) {
-		el.after("<ul id='fs_search_results'></ul>");
-		//now add up and down listener to toggle and select results
-		
-		resultsList = $("#fs_search_results");
+		if(opts.list_id == listID) { //this means they have not change the default ul id so add it automatically
+			el.after("<ul id='fs_search_results'></ul>");
+			resultsList = $("#fs_search_results");	
+		} else { // they have provided a custom list id
+			resultsList = $("#" + opts.list_id);
+		}
 	}
 	
 	function callFoursquareSuggestion() {
